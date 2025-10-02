@@ -284,8 +284,10 @@ export class ToolCallEvent implements BaseTelemetryEvent {
     };
 
     if (this.error) {
+      attributes['error'] = this.error;
       attributes['error.message'] = this.error;
       if (this.error_type) {
+        attributes['error_type'] = this.error_type;
         attributes['error.type'] = this.error_type;
       }
     }
@@ -447,6 +449,7 @@ export class ApiResponseEvent implements BaseTelemetryEvent {
       total_token_count: this.total_token_count,
       prompt_id: this.prompt_id,
       auth_type: this.auth_type,
+      status_code: this.status_code,
     };
     if (this.response_text) {
       attributes['response_text'] = this.response_text;
@@ -1096,6 +1099,7 @@ export class ToolOutputTruncatedEvent implements BaseTelemetryEvent {
     return {
       ...getCommonAttributes(config),
       'event.name': EVENT_TOOL_OUTPUT_TRUNCATED,
+      eventName: this.eventName,
       'event.timestamp': this['event.timestamp'],
       tool_name: this.tool_name,
       original_content_length: this.original_content_length,
