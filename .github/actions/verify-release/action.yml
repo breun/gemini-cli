@@ -9,6 +9,9 @@ inputs:
   npm-registry-url:
     description: 'NPM Registry URL'
     required: false
+  npm-registry-scope:
+    description: 'NPM Registry Scope'
+    required: false
   expected-version:
     description: 'Expected version'
     required: true
@@ -24,6 +27,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'setup node'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: '${{ inputs.npm-registry-url }}'
+        scope: '${{ inputs.npm-registry-scope }}' # Optional: for scoped packages
     - name: '📝 Print Inputs'
       shell: 'bash'
       run: 'echo "${{ toJSON(inputs) }}"'
