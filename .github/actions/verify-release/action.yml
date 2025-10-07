@@ -18,6 +18,9 @@ inputs:
   gemini_api_key:
     description: 'The API key for running integration tests.'
     required: true
+  github-token:
+    description: 'The GitHub token for running integration tests.'
+    required: true
   ref:
     description: 'The branch, tag, or SHA to release from.'
     required: false
@@ -54,7 +57,11 @@ runs:
         timeout_seconds: 900
         retry_wait_seconds: 30
         max_attempts: 10
-        command: 'cd ./verify && pkg="${{ inputs.npm-package }}" && npm install --registry="${{ inputs.npm-registry-url }}" --prefer-online --no-cache -g "$pkg"'
+        command: |-
+          cd ./verify
+          pkg="${{ inputs.npm-package }}
+          NODE_AUTH_TOKEN="${{ inputs.github-token }}"
+          npm install --registry="${{ inputs.npm-registry-url }}" --prefer-online --no-cache -g "$pkg"
 
     - name: 'Smoke test - NPM Install'
       shell: 'bash'
