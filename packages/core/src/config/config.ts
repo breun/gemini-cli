@@ -473,6 +473,7 @@ export class Config {
    * Must only be called once, throws if called again.
    */
   async initialize(): Promise<void> {
+    process.stderr.write('[DEBUG] Config.initialize() called\\n');
     if (this.initialized) {
       throw Error('Config was already initialized');
     }

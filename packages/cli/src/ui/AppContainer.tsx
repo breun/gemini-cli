@@ -125,7 +125,25 @@ const SHELL_WIDTH_FRACTION = 0.89;
 const SHELL_HEIGHT_PADDING = 10;
 
 export const AppContainer = (props: AppContainerProps) => {
+  console.debug('[DEBUG] top of App container');
   const { settings, config, initializationResult } = props;
+
+  const [isConfigInitialized, setConfigInitialized] = useState(false);
+  console.debug('[DEBUG] outside useEffect');
+  useEffect(() => {
+    (async () => {
+      console.debug('[DEBUG] inside useEffect');
+      // Note: the program will not work if this fails so let errors be
+      // handled by the global catch.
+      await config.initialize();
+      setConfigInitialized(true);
+    })();
+    registerCleanup(async () => {
+      const ideClient = await IdeClient.getInstance();
+      await ideClient.disconnect();
+    });
+  }, [config]);
+
   const historyManager = useHistory();
   useMemoryMonitor(historyManager);
   const [corgiMode, setCorgiMode] = useState(false);
@@ -187,8 +205,6 @@ export const AppContainer = (props: AppContainerProps) => {
 
   const [userTier, setUserTier] = useState<UserTierId | undefined>(undefined);
 
-  const [isConfigInitialized, setConfigInitialized] = useState(false);
-
   const logger = useLogger(config.storage);
   const [userMessages, setUserMessages] = useState<string[]>([]);
 
@@ -208,19 +224,6 @@ export const AppContainer = (props: AppContainerProps) => {
   );
   const lastTitleRef = useRef<string | null>(null);
   const staticExtraHeight = 3;
-
-  useEffect(() => {
-    (async () => {
-      // Note: the program will not work if this fails so let errors be
-      // handled by the global catch.
-      await config.initialize();
-      setConfigInitialized(true);
-    })();
-    registerCleanup(async () => {
-      const ideClient = await IdeClient.getInstance();
-      await ideClient.disconnect();
-    });
-  }, [config]);
 
   useEffect(
     () => setUpdateHandler(historyManager.addItem, setUpdateInfo),

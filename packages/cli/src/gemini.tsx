@@ -50,8 +50,6 @@ import { runZedIntegration } from './zed-integration/zedIntegration.js';
 import { cleanupExpiredSessions } from './utils/sessionCleanup.js';
 import { validateNonInteractiveAuth } from './validateNonInterActiveAuth.js';
 import { detectAndEnableKittyProtocol } from './ui/utils/kittyProtocolDetector.js';
-import { checkForUpdates } from './ui/utils/updateCheck.js';
-import { handleAutoUpdate } from './utils/handleAutoUpdate.js';
 import { appEvents, AppEvent } from './utils/events.js';
 import { computeWindowTitle } from './utils/windowTitle.js';
 import { SettingsContext } from './ui/contexts/SettingsContext.js';
@@ -144,9 +142,10 @@ export async function startInteractiveUI(
   workspaceRoot: string = process.cwd(),
   initializationResult: InitializationResult,
 ) {
+  console.debug('[DEBUG] startInteractiveUI\\n');
+
   const version = await getCliVersion();
   setWindowTitle(basename(workspaceRoot), settings);
-
   // Create wrapper component to use hooks inside render
   const AppWrapper = () => {
     const kittyProtocolStatus = useKittyKeyboardProtocol();
@@ -172,7 +171,7 @@ export async function startInteractiveUI(
       </SettingsContext.Provider>
     );
   };
-
+  console.debug('[DEBUG] before render\\n');
   const instance = render(
     process.env['DEBUG'] ? (
       <React.StrictMode>
@@ -187,16 +186,18 @@ export async function startInteractiveUI(
     },
   );
 
-  checkForUpdates()
-    .then((info) => {
-      handleAutoUpdate(info, settings, config.getProjectRoot());
-    })
-    .catch((err) => {
-      // Silently ignore update check errors.
-      if (config.getDebugMode()) {
-        console.error('Update check failed:', err);
-      }
-    });
+  console.debug('[DEBUG] after render\\n');
+
+  // checkForUpdates()
+  //   .then((info) => {
+  //     handleAutoUpdate(info, settings, config.getProjectRoot());
+  //   })
+  //   .catch((err) => {
+  //     // Silently ignore update check errors.
+  //     if (config.getDebugMode()) {
+  //       console.error('Update check failed:', err);
+  //     }
+  //   });
 
   registerCleanup(() => instance.unmount());
 }

@@ -21,7 +21,7 @@ describe('Ctrl+C exit', () => {
     });
 
     // Wait for the app to be ready by looking for the initial prompt indicator
-    await rig.poll(() => output.includes('▶'), 5000, 100);
+    await rig.poll(() => output.includes('Type your message'), 5000, 100);
 
     // Send first Ctrl+C
     ptyProcess.write('\x03');
