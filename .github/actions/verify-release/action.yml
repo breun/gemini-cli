@@ -59,7 +59,7 @@ runs:
         max_attempts: 10
         command: |-
           cd ./verify
-          pkg="${{ inputs.npm-package }}
+          pkg="${{ inputs.npm-package }}"
           NODE_AUTH_TOKEN="${{ inputs.github-token }}"
           npm install --registry="${{ inputs.npm-registry-url }}" --prefer-online --no-cache -g "$pkg"
 
