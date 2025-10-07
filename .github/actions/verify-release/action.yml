@@ -9,7 +9,6 @@ inputs:
   npm-registry-url:
     description: 'NPM Registry URL'
     required: false
-    default: 'https://registry.npmjs.org'
   expected-version:
     description: 'Expected version'
     required: true
