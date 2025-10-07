@@ -32,13 +32,13 @@ on:
         default: 'prod'
 
 jobs:
-  permissions:
-    contents: 'read'
-    packages: 'read'
-    issues: 'write'
   verify-release:
     environment: '${{ github.event.inputs.environment }}'
     runs-on: 'self-hosted'
+    permissions:
+      contents: 'read'
+      packages: 'read'
+      issues: 'write'
     steps:
       - name: '📝 Print vars'
         shell: 'bash'
