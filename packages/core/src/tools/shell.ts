@@ -451,6 +451,10 @@ export class ShellTool extends BaseDeclarativeTool<
   protected override validateToolParamValues(
     params: ShellToolParams,
   ): string | null {
+    if (!params.command.trim()) {
+      return 'Command cannot be empty.';
+    }
+
     const commandCheck = isCommandAllowed(params.command, this.config);
     if (!commandCheck.allowed) {
       if (!commandCheck.reason) {
@@ -460,9 +464,6 @@ export class ShellTool extends BaseDeclarativeTool<
         return `Command is not allowed: ${params.command}`;
       }
       return commandCheck.reason;
-    }
-    if (!params.command.trim()) {
-      return 'Command cannot be empty.';
     }
     if (getCommandRoots(params.command).length === 0) {
       return 'Could not identify command root to obtain permission from user.';
